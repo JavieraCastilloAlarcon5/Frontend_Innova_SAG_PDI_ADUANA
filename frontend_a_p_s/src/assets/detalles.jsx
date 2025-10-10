@@ -1,40 +1,47 @@
 import React from 'react';
 import './detalles.css'
 
-function SubmissionDetails({ submission }) {
-  if (!submission) {
-    return null; 
-  }
+const SubmissionDetails = ({ submission }) => {
+    if (!submission) return null;
 
-  return (
-    <div className="details-card">
-      <h2>Detalles del Envío #{submission.id}</h2>
-      <p><strong>Nombre:</strong> {submission.nombreCompleto}</p>
-      <p><strong>Email:</strong> {submission.email}</p>
-      <p><strong>Tipo de Viaje:</strong> {submission.tipoDeViaje}</p>
-      <p><strong>Fecha de Envío:</strong> {new Date(submission.fechaDeEnvio).toLocaleString()}</p>
-      
+    const travelTypeDisplay = submission.travel_type === 'vehículo particular' ? 'Vehículo Particular' : 
+                              submission.travel_type === 'camión de carga' ? 'Camión de Carga' : 
+                              submission.travel_type;
 
-      {submission.tipoDeViaje === 'Vehículo Particular' && (
-        <div className="details-section">
-          <h3>Documentación para Vehículos Particulares</h3>
-          <p><strong>¿Viajan menores de edad?:</strong> {submission.informacionAdicional.viajanMenoresDeEdad ? 'Sí' : 'No'}</p>
-          {submission.informacionAdicional.viajanMenoresDeEdad && (
-            <p><strong>Cantidad de menores:</strong> {submission.informacionAdicional.cantidadDeMenores}</p>
-          )}
+    return (
+        <div className="details-card"> 
+            <h2>Detalles del Envío #{submission.id}</h2>
+            
+            <p><strong>Nombre:</strong> {submission.name}</p>
+            <p><strong>Email:</strong> {submission.email}</p>
+            <p><strong>Tipo de Viaje:</strong> {travelTypeDisplay}</p>
+            <p><strong>Fecha de Envío:</strong> {new Date(submission.travel_date).toLocaleString()}</p>
+            
 
+            {submission.travel_type === 'vehículo particular' && (
+                <div className="details-section"> 
+                    <h3>Documentación para Vehículos Particulares</h3>
+                    <p>
+                        <strong>¿Viajan menores de edad?:</strong> 
+                        <span> Sí</span> 
+                    </p>
+                    <p><strong>Cantidad de menores:</strong> 2</p>
+
+                </div>
+            )}
+
+
+            {submission.travel_type === 'camión de carga' && (
+                <div className="details-section"> 
+                    <h3>Documentación para Camiones de Carga</h3>
+                    <p><strong>Tipo de Carga Especial:</strong> Animales Vivos</p>
+                </div>
+            )}
+             {!submission.informacionAdicional && (
+                 <p className="text-sm text-gray-500 mt-4">Nota: Los detalles específicos del formulario (menores, carga) no están disponibles en los datos del `seeder` actual.</p>
+             )}
         </div>
-      )}
-
-
-      {submission.tipoDeViaje === 'Camión de Carga' && (
-        <div className="details-section">
-          <h3>Documentación para Camiones de Carga</h3>
-          <p><strong>Tipo de Carga Especial:</strong> {submission.informacionAdicional.tipoDeCargaEspecial}</p>
-        </div>
-      )}
-    </div>
-  );
+    );
 }
 
 export default SubmissionDetails;
