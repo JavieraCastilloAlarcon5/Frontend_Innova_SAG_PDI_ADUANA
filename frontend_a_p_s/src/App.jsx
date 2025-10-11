@@ -21,7 +21,7 @@ function App() {
     if (!isLoggedIn) return;
 
 
-    fetch('http://localhost:3001/api/persons')
+    fetch('http://localhost:3001/persons')
     .then(response => response.json())
     .then(data => {
       const formattedData = data.map(person => ({
