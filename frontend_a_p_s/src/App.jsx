@@ -27,10 +27,12 @@ function App() {
       const formattedData = data.map(person => ({
         id: person.id,
         nombreCompleto: person.name,
+        rut: person.rut,
         email: person.email,
         tipoDeViaje: person.travel_type,
-        fechaDeEnvio: person.travel_date,
+        fecha: person.travel_date,
       }));
+
       setSubmissions(formattedData);
     })
     .catch(error => console.error('Error al obtener datos del backend:', error));
@@ -39,7 +41,7 @@ function App() {
   const filteredSubmissions = submissions.filter(submission => {
     const matchesSearch = submission.nombreCompleto.toLowerCase().includes(searchTerm.toLowerCase()) || 
                           submission.email.toLowerCase().includes(searchTerm.toLowerCase());
-    const submissionDate = new Date(submission.fechaDeEnvio);
+    const submissionDate = new Date(submission.fecha);
     const matchesDate = (!startDate || submissionDate >= new Date(startDate)) && (!endDate || submissionDate <= new Date(endDate));
     const matchesTravelType = !travelTypeFilter || submission.tipoDeViaje === travelTypeFilter;
     return matchesSearch && matchesDate && matchesTravelType;

@@ -2,7 +2,7 @@ import React from 'react';
 import './filtro.css'
 
 
-function SearchAndFilter({ setSearchTerm, setStartDate, setEndDate, setTravelTypeFilter }) {
+function SearchAndFilter({ setSearchTerm, setStartDate, setTravelTypeFilter }) {
   return (
     <div className="search-filter-container">
       <input 
@@ -13,20 +13,14 @@ function SearchAndFilter({ setSearchTerm, setStartDate, setEndDate, setTravelTyp
       />
       <select onChange={e => setTravelTypeFilter(e.target.value)} className="filter-select">
         <option value="">Todos los Tipos de Viaje</option>
-        <option value="Vehículo Particular">Vehículo Particular</option>
-        <option value="Camión de Carga">Camión de Carga</option>
+        <option value="vehículo particular">Vehículo Particular</option>
+        <option value="camión de carga">Camión de Carga</option>
       </select>
       <input 
         type="date" 
         onChange={e => setStartDate(e.target.value)} 
         className="date-input"
         title="Fecha de Inicio"
-      />
-      <input 
-        type="date" 
-        onChange={e => setEndDate(e.target.value)} 
-        className="date-input"
-        title="Fecha de Fin"
       />
     </div>
   );

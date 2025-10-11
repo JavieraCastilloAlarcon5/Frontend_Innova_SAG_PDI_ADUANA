@@ -1,5 +1,5 @@
 import React from 'react';
-import './filtro.css'
+import './filtro.css';
 
 function SubmissionTable({ submissions, onSelectSubmission }) {
   return (
@@ -10,9 +10,10 @@ function SubmissionTable({ submissions, onSelectSubmission }) {
           <tr>
             <th>ID</th>
             <th>Nombre Completo</th>
+            <th>RUT</th>
             <th>Email</th>
             <th>Tipo de Viaje</th>
-            <th>Fecha de Envío</th>
+            <th>Fecha</th>
           </tr>
         </thead>
         <tbody>
@@ -21,14 +22,15 @@ function SubmissionTable({ submissions, onSelectSubmission }) {
               <tr key={submission.id} onClick={() => onSelectSubmission(submission)}>
                 <td>{submission.id}</td>
                 <td>{submission.nombreCompleto}</td>
+                <td>{submission.rut || '—'}</td>
                 <td>{submission.email}</td>
                 <td>{submission.tipoDeViaje}</td>
-                <td>{new Date(submission.fechaDeEnvio).toLocaleDateString()}</td>
+                <td>{new Date(submission.fecha).toLocaleDateString()}</td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="5">No se encontraron resultados.</td>
+              <td colSpan="6">No se encontraron resultados.</td>
             </tr>
           )}
         </tbody>
