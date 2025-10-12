@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './login.css'
 
 function AuthForm({ type, onSubmit }) {
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [accountType, setAccountType] = useState('Aduana'); 
@@ -12,14 +13,23 @@ function AuthForm({ type, onSubmit }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    onSubmit(email, password, accountType);
+    onSubmit(username, email, password, accountType);
   };
 
   return (
     <div className="auth-form-container">
       <h2>{title}</h2>
       <form onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label htmlFor="username">Username:</label>
+          <input
+            type="text"
+            id="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
+        </div>
         <div className="form-group">
           <label htmlFor="email">Email:</label>
           <input

@@ -1,5 +1,38 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext} from 'react';
 import './detalles.css';
+import { AuthContext } from '../auth/AuthContext';
+
+
+const ShowRecords = ({ records }) => {
+  const { data } = useContext(AuthContext) || {};
+  if (!records || records.length === 0) return null;
+
+  if (data?.role === 'PDI') {
+    return (
+      <ul>
+        {records.map((record, index) => (
+          <li key={index}>
+            <strong>Crimen:</strong>{' '}
+            {record.Crime ? record.Crime.name : 'Desconocido'} <br />
+            <strong>Fecha:</strong>{' '}
+            {record.date ? new Date(record.date).toLocaleDateString('es-ES') : 'Sin fecha'}
+          </li>
+        ))}
+      </ul>
+    );
+  }
+
+  return (
+    <ul>
+      {records.map((record, index) => (
+        <li key={index}>
+          {record.Crime ? record.Crime.warning : 'Desconocido'} <br />
+        </li>
+      ))}
+    </ul>
+  );
+};
+ 
 
 const SubmissionDetails = ({ submission }) => {
     const [records, setRecords] = useState([]); 
@@ -13,7 +46,7 @@ const SubmissionDetails = ({ submission }) => {
             setLoading(true);
             setError(null);
             try {
-                const response = await fetch(`http://localhost:3001/persons/record/${submission.id}`);
+                const response = await fetch(`http://localhost:3000/persons/record/${submission.id}`);
                 const data = await response.json();
                 if (response.ok) {
                     setRecords(data.Record || data.Records || []);
@@ -59,16 +92,7 @@ const SubmissionDetails = ({ submission }) => {
                 ) : error ? (
                     <p className="error-text">{error}</p>
                 ) : records.length > 0 ? (
-                    <ul>
-                        {records.map((record, index) => (
-                            <li key={index}>
-                                <strong>Crimen:</strong>{' '}
-                                {record.Crime ? record.Crime.name : 'Desconocido'} <br />
-                                <strong>Fecha:</strong>{' '}
-                                {record.date ? new Date(record.date).toLocaleDateString('es-ES') : 'Sin fecha'}
-                            </li>
-                        ))}
-                    </ul>
+                    <ShowRecords records={records} />
                 ) : (
                     <p>Sin antecedentes registrados.</p>
                 )}

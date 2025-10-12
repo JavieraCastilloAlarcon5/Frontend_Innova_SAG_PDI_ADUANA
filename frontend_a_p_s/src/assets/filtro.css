@@ -1,3 +1,17 @@
+
+.table-container,
+.table-container * {
+  color: #000 !important;
+}
+
+.submission-table,
+.submission-table th,
+.submission-table td,
+.submission-table a {
+  color: #000 !important;
+}
+
+
 .search-filter-container {
   display: flex;
   flex-wrap: wrap;

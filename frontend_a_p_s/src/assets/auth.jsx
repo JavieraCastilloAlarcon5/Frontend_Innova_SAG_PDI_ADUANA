@@ -1,51 +1,56 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import AuthForm from './login';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../auth/AuthContext';
 
 const Auth = ({ onAuthSuccess }) => {
   const [authType, setAuthType] = useState('login'); 
   const [error, setError] = useState('');
-
-  const handleAuth = (email, password, accountType) => {
-    setError('');
-
-    const isLogin = authType === 'login';
-    const url = isLogin ? '/api/login' : '/api/signup';
-    
-    const payload = isLogin 
-      ? { email, password }
-      : { email, password, accountType }; 
-
-    fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    })
-      .then(response => {
-        if (!response.ok) throw new Error('Network response failed or server error');
-        return response.json();
-      })
-      .then(data => {
-        if (data.success) { 
-          const user = { accountType: data.user?.accountType || 'Aduana' };
-          onAuthSuccess(user); 
-        } else {
-          setError(data.message || 'Error de autenticación, verifica tus credenciales.');
-        }
-      })
-      .catch(error => {
-        console.error('Error en la conexión con el backend:', error);
-        setError('No se pudo conectar con el servidor API. Usando simulación.');
-        
-        setTimeout(() => {
-             const user = { accountType: isLogin ? 'Aduana' : accountType };
-             onAuthSuccess(user);
-        }, 500);
-      });
+  const { setLogged, setData } = useContext(AuthContext);
+  const navigate = useNavigate();;
+  const URL = 'http://localhost:3000';
+  const handleAuth = (username,email, password, accountType) => {
+    if (authType === 'signup') {
+      axios
+        .post(`${URL}/users/signup`, {
+          username,
+          email,
+          password,
+          accountType
+        })
+        .then(response => {
+          console.log('Signup Successful');
+          setData(response.data.user);
+          setLogged(true);
+          setError('');
+          navigate('/informacion');
+        })
+        .catch(err => {
+          setError('Error al crear la cuenta. Intenta nuevamente.');
+        });
+    } else {
+      axios
+        .post(`${URL}/users/login`, {
+          username,
+          email,
+          password
+        })
+        .then(response => {
+          console.log('Login Successful');
+          setData(response.data.user);
+          setLogged(true);
+          setError('');
+          navigate('/informacion')
+        })
+        .catch(err => {
+          setError('Error al iniciar sesión. Intenta nuevamente.');
+        });
+    }
   };
 
   const toggleAuthType = () => {
     setAuthType(authType === 'login' ? 'signup' : 'login');
-    setError(''); 
   };
 
   return (
