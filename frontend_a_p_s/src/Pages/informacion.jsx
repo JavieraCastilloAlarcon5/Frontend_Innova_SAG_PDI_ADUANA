@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react'; 
 import '../App.css';
-import SearchAndFilter from '../assets/buscador';
-import SubmissionTable from '../assets/tabla';
-import SubmissionDetails from '../assets/detalles';
+import SearchAndFilter from '../components/buscador';
+import SubmissionTable from '../components/tabla';
+import SubmissionDetails from '../components/detalles';
 import { AuthContext } from '../auth/AuthContext';
-import { data, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function Informacion() {
-  const { isLoggedIn, setIsLoggedIn, logout } = useContext(AuthContext);
+  const { data, logged, logout } = useContext(AuthContext);
   const [submissions, setSubmissions] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [startDate, setStartDate] = useState(null);
@@ -17,13 +17,20 @@ function Informacion() {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const limit = 25;
-const navigate = useNavigate();
+  const navigate = useNavigate();
+
+  // 🟢 Debug: Ver si el contexto se carga correctamente
+  useEffect(() => {
+    console.log("🔐 AuthContext data en Informacion:", data);
+    console.log("🔐 Usuario logueado:", logged);
+  }, [data, logged]);
 
   useEffect(() => {
-
+    console.log("📡 Fetching data from backend...");
     fetch(`http://localhost:3000/persons?page=${page}&limit=${limit}`)
       .then(response => response.json())
       .then(data => {
+        console.log("✅ Datos recibidos del backend:", data);
         if (data.length < limit) setHasMore(false);
         else setHasMore(true);
 
@@ -38,8 +45,8 @@ const navigate = useNavigate();
 
         setSubmissions(formattedData);
       })
-      .catch(error => console.error('Error al obtener datos del backend:', error));
-  }, [isLoggedIn, page]);
+      .catch(error => console.error('❌ Error al obtener datos del backend:', error));
+  }, [logged, page]);
 
   const filteredSubmissions = submissions.filter(submission => {
     const matchesSearch =
@@ -66,50 +73,66 @@ const navigate = useNavigate();
   };
 
   const handleLogout = () => {
+    console.log("🚪 Cerrando sesión...");
     logout();
     navigate('/');
   };
 
+  // 🟣 Debug: función para detectar si se selecciona correctamente una fila
+  const handleSelectSubmission = (submission) => {
+    console.log("🟢 Submission seleccionado:", submission);
+    setSelectedSubmission(submission);
+  };
+
+  // 🟣 Debug: verificar cambios de selección
+  useEffect(() => {
+    console.log("📄 selectedSubmission actualizado:", selectedSubmission);
+  }, [selectedSubmission]);
+
   return (
     <div className="app-container">
-        <h1 className="main-title">Panel de Documentación</h1>
-        <button onClick={handleLogout} className="logout-btn">
+      <h1 className="main-title">Panel de Documentación</h1>
+      <button onClick={handleLogout} className="logout-btn">
         Cerrar Sesión
-        </button>
+      </button>
 
-        <div className="content-wrapper">
+      <div className="content-wrapper">
         <div className="filters-and-table">
-            <SearchAndFilter
+          <SearchAndFilter
             setSearchTerm={setSearchTerm}
             setStartDate={setStartDate}
             setEndDate={setEndDate}
             setTravelTypeFilter={setTravelTypeFilter}
-            />
+          />
 
-            <SubmissionTable
+          <SubmissionTable
             submissions={filteredSubmissions}
-            onSelectSubmission={setSelectedSubmission}
-            />
+            onSelectSubmission={handleSelectSubmission}
+          />
 
-            <div className="pagination-controls">
+          <div className="pagination-controls">
             <button onClick={handlePrevPage} disabled={page === 1}>
-                ← Anterior
+              ← Anterior
             </button>
             <span>Página {page}</span>
             <button onClick={handleNextPage} disabled={!hasMore}>
-                Siguiente →
+              Siguiente →
             </button>
-            </div>
+          </div>
         </div>
 
         <div className="details-panel">
-            {selectedSubmission ? (
-            <SubmissionDetails submission={selectedSubmission} />
-            ) : (
+          {selectedSubmission ? (
+            // 🔑 Forzar remount en cada selección para refrescar el useEffect de SubmissionDetails
+            <SubmissionDetails
+              key={selectedSubmission.id}
+              submission={selectedSubmission}
+            />
+          ) : (
             <p>Selecciona un envío de la tabla para ver los detalles.</p>
-            )}
+          )}
         </div>
-        </div>
+      </div>
     </div>
   );
 }

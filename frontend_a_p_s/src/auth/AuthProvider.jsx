@@ -2,7 +2,8 @@ import { useEffect , useState} from "react";
 import { AuthContext } from "./AuthContext";
 import axios from "axios";
 function AuthProvider({ children }) {
-    const [data, setData] = useState(localStorage.getItem('data') || null);
+    const storedData = localStorage.getItem('data');
+    const [data, setData] = useState(storedData ? JSON.parse(storedData) : null);
     const [logged, setLogged] = useState(localStorage.getItem('logged') === 'true' || false);
 
     function logout() {
@@ -12,7 +13,7 @@ function AuthProvider({ children }) {
     }
 
     useEffect(() => {
-        localStorage.setItem('data', data);
+        localStorage.setItem('data', JSON.stringify(data));
         localStorage.setItem('logged', logged);
     }, [data, logged]);
 

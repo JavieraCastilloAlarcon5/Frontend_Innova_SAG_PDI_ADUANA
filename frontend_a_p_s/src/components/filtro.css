@@ -4,6 +4,13 @@
   color: #000 !important;
 }
 
+.details-card ul,
+.details-card ul li,
+.details-card ul li strong,
+.details-card ul li a {
+  color: #000 !important;
+}
+
 .submission-table,
 .submission-table th,
 .submission-table td,

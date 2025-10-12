@@ -7,17 +7,17 @@ import { AuthContext } from '../auth/AuthContext';
 const Auth = ({ onAuthSuccess }) => {
   const [authType, setAuthType] = useState('login'); 
   const [error, setError] = useState('');
-  const { setLogged, setData } = useContext(AuthContext);
+  const { data, setLogged, setData } = useContext(AuthContext);
   const navigate = useNavigate();;
   const URL = 'http://localhost:3000';
-  const handleAuth = (username,email, password, accountType) => {
+  const handleAuth = (username,email, password, role) => {
     if (authType === 'signup') {
       axios
         .post(`${URL}/users/signup`, {
           username,
           email,
           password,
-          accountType
+          role
         })
         .then(response => {
           console.log('Signup Successful');
@@ -39,6 +39,7 @@ const Auth = ({ onAuthSuccess }) => {
         .then(response => {
           console.log('Login Successful');
           setData(response.data.user);
+          console.log(response.data.user.accountType);
           setLogged(true);
           setError('');
           navigate('/informacion')

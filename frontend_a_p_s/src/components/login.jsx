@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext} from 'react';
 import './login.css'
 
 function AuthForm({ type, onSubmit }) {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [accountType, setAccountType] = useState('Aduana'); 
+  const [role, setRole] = useState('Aduana');
 
   const isLogin = type === 'login';
   const title = isLogin ? 'Iniciar Sesión' : 'Crear Cuenta';
@@ -13,7 +13,7 @@ function AuthForm({ type, onSubmit }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(username, email, password, accountType);
+    onSubmit(username, email, password, role);
   };
 
   return (
@@ -55,9 +55,9 @@ function AuthForm({ type, onSubmit }) {
           <div className="form-group">
             <label htmlFor="accountType">Tipo de Cuenta:</label>
             <select
-              id="accountType"
-              value={accountType}
-              onChange={(e) => setAccountType(e.target.value)}
+              id="role"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
             >
               <option value="Aduana">Aduana</option>
               <option value="PDI">PDI</option>

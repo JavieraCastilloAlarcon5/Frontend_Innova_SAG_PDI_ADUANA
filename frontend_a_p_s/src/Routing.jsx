@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Informacion from './Pages/informacion'
-import Auth from './assets/auth'
+import Auth from './components/auth'
 
 function Routing(){
     return (
