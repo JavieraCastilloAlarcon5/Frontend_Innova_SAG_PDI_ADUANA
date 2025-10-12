@@ -59,7 +59,7 @@ function AuthForm({ type, onSubmit }) {
               value={role}
               onChange={(e) => setRole(e.target.value)}
             >
-              <option value="Aduana">Aduana</option>
+              <option value="Aduanas">Aduanas</option>
               <option value="PDI">PDI</option>
               <option value="SAG">SAG</option>
             </select>
