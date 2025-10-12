@@ -5,7 +5,7 @@ function AuthForm({ type, onSubmit }) {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('Aduana');
+  const [role, setRole] = useState('Aduanas');
 
   const isLogin = type === 'login';
   const title = isLogin ? 'Iniciar Sesión' : 'Crear Cuenta';

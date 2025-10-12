@@ -50,7 +50,7 @@ const SubmissionDetails = ({ submission }) => {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Role': data?.role || ''
+                    'Role': data.role === 'Aduana' ? 'Aduanas' : data.role  
                 }
             });
 
