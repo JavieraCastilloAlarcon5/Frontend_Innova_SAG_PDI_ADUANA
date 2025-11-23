@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import './detalles.css';
 import { AuthContext } from '../auth/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const ShowRecords = ({ records }) => {
   const { data } = useContext(AuthContext) || {};
@@ -37,6 +38,7 @@ const SubmissionDetails = ({ submission }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { data } = useContext(AuthContext) || {};
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!submission) return;
@@ -82,6 +84,10 @@ const SubmissionDetails = ({ submission }) => {
     fetchRecords();
   }, [submission, data]);
 
+  const handleViewDocument = (docType) => {
+    navigate(`/documentos/${docType}/${submission.id}`);
+  };
+
   if (!submission) return null;
 
   return (
@@ -97,6 +103,26 @@ const SubmissionDetails = ({ submission }) => {
           ? new Date(submission.fecha).toLocaleDateString('es-ES')
           : 'No disponible'}
       </p>
+
+      <div className="details-section">
+        <h3>Documentos Digitalizados</h3>
+        <div className="document-buttons-container">
+            <button 
+                className="doc-btn" 
+                onClick={() => handleViewDocument('carnet')}
+            >
+               Ver Carnet de Identidad
+            </button>
+
+            <button 
+                className="doc-btn" 
+                onClick={() => handleViewDocument('Carnet_de_Conducir')}
+            >
+                Carnet de Conducir
+            </button>
+            
+        </div>
+      </div>
 
       <div className="details-section">
         <h3>Antecedentes Penales</h3>
