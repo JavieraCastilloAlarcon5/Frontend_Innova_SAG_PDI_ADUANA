@@ -1,53 +1,36 @@
-import React, { useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import AuthForm from './login';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../auth/AuthContext';
 
+const accessWithAxios = async (route, credentials, URL, setters) => {
+  const { setData, setLogged, setError, navigate } = setters;
+
+  try {
+    const response = await axios.post(`${URL}/auth/${route}`, credentials);
+    console.log('Success');
+    setData(response.data.user);
+    setLogged(true);
+    setError('');
+    navigate('/informacion');
+  } catch (err) {
+    setError('Error al ingresar. Intenta nuevamente.');
+  }
+};
+
 const Auth = ({ onAuthSuccess }) => {
   const [authType, setAuthType] = useState('login'); 
   const [error, setError] = useState('');
-  const { data, setLogged, setData } = useContext(AuthContext);
+  const { setLogged, setData } = useContext(AuthContext);
   const navigate = useNavigate();;
   const URL = 'http://localhost:3000';
+
   const handleAuth = (username,email, password, role) => {
-    if (authType === 'signup') {
-      axios
-        .post(`${URL}/users/signup`, {
-          username,
-          email,
-          password,
-          role
-        })
-        .then(response => {
-          console.log('Signup Successful');
-          setData(response.data.user);
-          setLogged(true);
-          setError('');
-          navigate('/informacion');
-        })
-        .catch(err => {
-          setError('Error al crear la cuenta. Intenta nuevamente.');
-        });
-    } else {
-      axios
-        .post(`${URL}/users/login`, {
-          username,
-          email,
-          password
-        })
-        .then(response => {
-          console.log('Login Successful');
-          setData(response.data.user);
-          console.log(response.data.user.accountType);
-          setLogged(true);
-          setError('');
-          navigate('/informacion')
-        })
-        .catch(err => {
-          setError('Error al iniciar sesión. Intenta nuevamente.');
-        });
-    }
+    const setters = { setData, setLogged, setError, navigate };
+    const credentials = { username, email, password, role };
+
+    accessWithAxios(authType, credentials, URL, setters);
   };
 
   const toggleAuthType = () => {
