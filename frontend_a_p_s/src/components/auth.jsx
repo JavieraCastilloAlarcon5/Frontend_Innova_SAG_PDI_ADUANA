@@ -4,12 +4,16 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../auth/AuthContext';
 
+
+
 const accessWithAxios = async (route, credentials, URL, setters) => {
   const { setData, setLogged, setError, navigate } = setters;
 
   try {
-    const response = await axios.post(`${URL}/auth/${route}`, credentials);
-    console.log('Success');
+    const response = await axios.post(`${URL}/auth/${route}`, credentials, {
+      withCredentials: true
+    });
+    const accessToken = response?.data?.accessToken
     setData(response.data.user);
     setLogged(true);
     setError('');

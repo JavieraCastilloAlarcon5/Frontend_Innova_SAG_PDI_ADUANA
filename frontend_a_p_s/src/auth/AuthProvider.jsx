@@ -1,7 +1,8 @@
 import { useEffect , useState} from "react";
 import { AuthContext } from "./AuthContext";
-import axios from "axios";
+
 function AuthProvider({ children }) {
+    const [ auth, setAuth ] = useState({}); 
     const storedData = localStorage.getItem('data');
     const [data, setData] = useState(storedData ? JSON.parse(storedData) : null);
     const [logged, setLogged] = useState(localStorage.getItem('logged') === 'true' || false);
@@ -18,7 +19,7 @@ function AuthProvider({ children }) {
     }, [data, logged]);
 
     return (
-        <AuthContext.Provider value={{ logout, data, setData, logged, setLogged }}>
+        <AuthContext.Provider value={{ logout, data, setData, logged, setLogged, auth, setAuth }}>
             {children}
         </AuthContext.Provider>
     );
